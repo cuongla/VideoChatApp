@@ -1,38 +1,186 @@
-.App {
+/* =========== FORM ========== */
+.form_input_container {
+  width: 80%;
+  display: flex;
+  justify-content: center;
+}
+
+.form_input {
+  width: 150px;
+  border-radius: 50px;
+  height: 30px;
+  outline: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 10px 10px;
+}
+
+.form_button_container {
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form_button {
+  border-radius: 50px;
+  outline: none;
+  border: 1px solid #e6e5e8;
+  font-size: 16px;
+  padding: 10px 10px;
+  width: 170px;
+  transition: 0.3s;
+}
+
+.form_button:hover {
+  background-color: #8706f0;
+  opacity: 0.5;
+}
+
+::-webkit-input-placeholder {
+  /* Chrome/Opera/Safari */
+  color: #e6e5e8;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+::-moz-placeholder {
+  /* Firefox 19+ */
+  color: #e6e5e8;
+  text-align: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+:-ms-input-placeholder {
+  /* IE 10+ */
+  color: #e6e5e8;
+  text-align: center;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+:-moz-placeholder {
+  /* Firefox 18- */
+  color: #e6e5e8;
+  text-align: center;
+}
+
+/* =========== LOGIN COMPONENT ========== */
+.login_container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login_box {
+  width: 350px;
+  height: 500px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-evenly;
+}
+
+.login_title_container {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
 }
 
-.App-link {
-  color: #61dafb;
+/* =========== DASHBOARD COMPONENT ========== */
+.dashboard_container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.dashboard_left_section {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard_right_section {
+  width: 20%;
+  height: 100%;
+}
+
+.dashboard_content_container {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  align-items: center;
+}
+
+.dashboard_rooms_container {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  align-items: center;
+}
+
+.dashboard_info_text_container {
+  margin-left: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard_info_text_title {
+  font-size: 50px;
+}
+
+.dashboard_info_text_description {
+  margin-top: 20px;
+  font-size: 20px;
+}
+
+.dashboard_active_users_list {
+  height: 80%
+}
+
+.dashboard_logo_container {
+  height: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 50px;
+}
+
+.dashboard_logo_image {
+  width: 60%;
+}
+
+/* =========== USER LISTS COMPONENT ========== */
+.active_user_list_container {
+  width: 100%;
+  height: 100%;
+}
+
+.active_user_list_item {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  transition: 0.3s;
+}
+
+.active_user_list_item:hover {
+  background-color: #8a85ff;
+}
+
+.active_user_list_image_container {
+  width: 60px;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+.active_user_list_text {
+  font-size: 24px;
+}
+
+.active_user_list_image {
+  width: 100%;
 }

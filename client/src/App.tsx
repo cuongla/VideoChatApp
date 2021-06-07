@@ -1,12 +1,11 @@
 import { FC } from 'react';
 import './App.css';
-import {   BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 // components
 import Dashboard from 'components/Dashboard';
 import Login from 'components/Login';
 import { useEffect } from 'react';
 import { connectWithWebSocket } from 'utils/wssConnect';
-
 
 const App: FC = () => {
   // connect to socket once window is loaded
@@ -14,7 +13,7 @@ const App: FC = () => {
     connectWithWebSocket();
   }, []);
 
-  
+
   return (
     <Router>
       <Switch>
