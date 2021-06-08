@@ -1,26 +1,51 @@
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { UserData } from './interfaces';
 
-interface IPeer {
-    username: string
-    socket: number | string
-}
+export const initSocketServer = (server: any) => {
+    const io = new Server(server, {
+        cors: {
+            origin: '*',
+            methods: ['GET', 'POST']
+        }
+    });
 
-const SocketServer = (socket: Socket) => {
-    socket.emit('connection', null);
-    console.log('Connecting to socket.io')
-    console.log(socket.id)
     // peers
-    let peers: IPeer[] = [];
+    let peers: UserData[] = [];
+    const broadcaseEventTypes = {
+        ACTIVE_USERS: 'ACTIVE_USERS',
+        GROUP_CALL_ROOMS: 'GROUP_CALL_ROOMS'
+    }
 
-    socket.on('addNewUser', (data: UserData) => {
-        peers.push({
-            username: data.username,
-            socket: data.socketId
+    io.on('connection', (socket: Socket) => {
+        socket.emit('connection', null);
+        console.log('Connecting to socket.io');
+        console.log(socket.id);
+
+        socket.on('addNewUser', (data: UserData) => {
+            peers.push({
+                username: data.username,
+                socketId: data.socketId
+            });
+
+            // add new user to list
+            io.sockets.emit('broadcast', {
+                event: broadcaseEventTypes.ACTIVE_USERS,
+                activeUsers: peers
+            });
+            console.log('New user is added');
+            console.log(peers);
         });
-        console.log('New user is added');
-        console.log(peers);
-    })
+
+        socket.on('disconnect', () => {
+            console.log('User is disconnected');
+            peers = peers.filter(peer => peer.socketId !== socket.id);
+
+            // update user list
+            io.sockets.emit('broadcast', {
+                event: broadcaseEventTypes.ACTIVE_USERS,
+                activeUsers: peers
+            });
+        });
+    });
 }
 
-export default SocketServer;

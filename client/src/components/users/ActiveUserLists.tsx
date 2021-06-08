@@ -1,9 +1,12 @@
 import React, { FC } from 'react'
-import { activeUsers } from 'fakeData';
 import ActiveUserItem from './ActiveUserItem';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store';
 
 
-const ActiveUserLists: FC = () => {
+const ActiveUserLists: FC=() => {
+    const { activeUsers } = useSelector((state: RootState) => state.dashboard);
+    
     return (
         <div className='active_user_list_container'>
             {activeUsers.map((user) => (
@@ -13,4 +16,4 @@ const ActiveUserLists: FC = () => {
     )
 }
 
-export default ActiveUserLists
+export default ActiveUserLists;

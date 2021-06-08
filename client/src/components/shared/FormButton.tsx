@@ -1,7 +1,7 @@
-import React, { FC } from 'react'
+import React, { FC, FormEvent } from 'react'
 
 interface SubmitButtonProps {
-    handleSubmit: () => void
+    handleSubmit: (event: FormEvent) => void
 }
 
 const SubmitButton: FC<SubmitButtonProps> = ({ handleSubmit }) => {

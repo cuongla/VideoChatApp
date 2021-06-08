@@ -1,12 +1,19 @@
-export const DASHBOARD_SET_USERNAME = 'DASHBOARD.SET_USERNAME';
+import { IUser } from "./userTypes";
+import * as actionTypes from 'store/actions/types';
 
 export interface dashboardState {
     username: string
+    activeUsers: IUser[]
 }
 
-interface setUsernamAction {
-    type: typeof DASHBOARD_SET_USERNAME
+type setUsernameAction = {
+    type: typeof actionTypes.DASHBOARD_SET_USERNAME
     username: string
 }
 
-export type dashboardActions =  setUsernamAction;
+type setActiveUsersAction = {
+    type: typeof actionTypes.DASHBOARD_SET_ACTIVE_USERS
+    activeUsers: IUser[]
+}
+
+export type dashboardActions =  setUsernameAction | setActiveUsersAction;

@@ -1,20 +1,23 @@
-import React, { FC, useState } from 'react'
+import React, { FC, FormEvent, useState } from 'react'
 import { useHistory } from 'react-router';
 import FormInput from './shared/FormInput';
 import FormButton from './shared/FormButton';
 import { addNewUser } from 'utils/wssConnect';
+import { useDispatch } from 'react-redux';
 
 interface LoginProps {
     saveUsername?: (username: string) => void
 }
 
 const Login: FC<LoginProps> = ({ saveUsername }) => {
-    const [username, setUsername] = useState('');
     const history = useHistory();
 
-    const handleSubmit = () => {
-        history.push('/dashboard');
-        // addNewUser(username);
+    const [username, setUsername] = useState('');
+
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+        history.push('/dashboard')
+        addNewUser(username);
         // saveUsername(username);
     }
 

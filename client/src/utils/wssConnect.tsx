@@ -1,14 +1,19 @@
 import io from 'socket.io-client'
+import { handleBroadcastEvents } from './socketFunctions';
 
 
 const serverUrl = 'http://localhost:5000';
-let socket = io(serverUrl);
+export let socket = io(serverUrl);
 
 export const connectWithWebSocket = () => {
     socket.on('connection', () => {
         console.log('succesfully connected with wss server');
         console.log(socket.id);
     });
+
+    socket.on('broadcast', (data) => {
+        handleBroadcastEvents(data);
+    })
 }
 
 export const addNewUser = (username: string) => {
@@ -17,3 +22,4 @@ export const addNewUser = (username: string) => {
         socketId: socket.id
     })
 }
+

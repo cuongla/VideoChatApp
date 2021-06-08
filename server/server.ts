@@ -1,9 +1,8 @@
 import express, { NextFunction, Request, Response } from 'express';
-import { Server, Socket } from 'socket.io';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import path from 'path';
-import SocketServer from './socketServer';
+import { initSocketServer } from './socketServer';
 
 const app = express();
 
@@ -25,10 +24,4 @@ const PORT = 5000;
 const server = app.listen(PORT, () => console.log(`Listning to port ${PORT}`));
 
 // connecting to socket
-const io = new Server(server, {
-    cors: {
-        origin: '*',
-        methods: ['GET', 'POST']
-    }
-});
-io.on('connection', (socket: Socket) => SocketServer(socket));
+initSocketServer(server);

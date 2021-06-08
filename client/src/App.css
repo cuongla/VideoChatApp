@@ -184,3 +184,28 @@
 .active_user_list_image {
   width: 100%;
 }
+
+/* =========== VIDEO ========== */
+.cameraViewContainer {
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
+  position: absolute;
+  top: 5%;
+  right: 23%;
+}
+
+.cameraViewElement {
+  width: 100%;
+  height: 100%;
+}
+
+.selfCameraViewContainer {
+  width: 100%;
+  height: 100%;
+}
+
+.selfCameraViewElement {
+  width: 100%;
+  height: 100%;
+}

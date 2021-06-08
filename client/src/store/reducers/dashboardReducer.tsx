@@ -1,24 +1,30 @@
-import { 
-    dashboardState,
-    dashboardActions,
-    DASHBOARD_SET_USERNAME 
-} from '../../typings/dashboardTypes';
+import { dashboardState, dashboardActions } from '../../typings/dashboardTypes';
+import {
+  DASHBOARD_SET_USERNAME,
+  DASHBOARD_SET_ACTIVE_USERS
+} from '../actions/types';
 
 const initState: dashboardState = {
-  username: ''
+  username: '',
+  activeUsers: []
 };
 
-const reducer = (state = initState, action: dashboardActions) => {
+const DashboardReducer = (state = initState, action: dashboardActions) => {
   switch (action.type) {
     case DASHBOARD_SET_USERNAME:
       return {
         ...state,
         username: action.username
       };
+    case DASHBOARD_SET_ACTIVE_USERS:
+      return {
+        ...state,
+        activeUsers: action.activeUsers
+      }
     default:
       return state;
   }
 }
-;
+  ;
 
-export default reducer;
+export default DashboardReducer;
