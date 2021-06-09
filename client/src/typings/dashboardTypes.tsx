@@ -1,5 +1,8 @@
 import { IUser } from "./userTypes";
-import * as actionTypes from 'store/actions/types';
+import {
+    DASHBOARD_SET_USERNAME,
+    DASHBOARD_SET_ACTIVE_USERS
+} from 'constants/index';
 
 export interface dashboardState {
     username: string
@@ -7,12 +10,12 @@ export interface dashboardState {
 }
 
 type setUsernameAction = {
-    type: typeof actionTypes.DASHBOARD_SET_USERNAME
+    type: typeof DASHBOARD_SET_USERNAME
     username: string
 }
 
 type setActiveUsersAction = {
-    type: typeof actionTypes.DASHBOARD_SET_ACTIVE_USERS
+    type: typeof DASHBOARD_SET_ACTIVE_USERS
     activeUsers: IUser[]
 }
 

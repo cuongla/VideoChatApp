@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
-import ActiveUserLists from './users/ActiveUserLists';
+import ActiveUserLists from 'components/users/ActiveUserLists';
 import { getLocalStream } from 'utils/webRTCHandler';
-import DirectCall from './calls/DirectCall';
+import DirectCall from 'components/calls/DirectCall';
 
-const Dashboard = () => {
+const DashboardPage = () => {
     useEffect(() => {
         getLocalStream()
     }, []);
@@ -27,4 +27,4 @@ const Dashboard = () => {
     )
 }
 
-export default Dashboard
+export default DashboardPage;

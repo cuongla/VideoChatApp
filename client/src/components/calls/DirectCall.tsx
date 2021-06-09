@@ -1,20 +1,20 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from 'store'
-import CameraView from './CameraView';
-import SelfCameraView from './SelfCameraView';
-
-interface DirectCallProsp {
-
-}
+import { callStates } from 'store/reducers/callReducer';
+import LocalWebcam from '../webcam/LocalWebcam';
+import IncomingCall from './IncomingCall';
+import CallingDialog from './CallingDialog';
 
 const DirectCall = () => {
-    const { localStream } = useSelector((state: RootState) => state.call);
+    const { localStream, callState, callerUsername, callingDialogVisible } = useSelector((state: RootState) => state.call);
 
 
     return (
         <>
-            <CameraView localStream={localStream} />
+            <LocalWebcam localStream={localStream} />
+            {callState === callStates.CALL_REQUESTED && <IncomingCall callerUsername={callerUsername} />}
+            {callingDialogVisible && <CallingDialog />}
         </>
     )
 }

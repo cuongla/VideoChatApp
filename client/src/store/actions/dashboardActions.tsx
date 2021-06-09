@@ -3,7 +3,7 @@ import { dashboardActions } from 'typings/dashboardTypes';
 import {
   DASHBOARD_SET_ACTIVE_USERS,
   DASHBOARD_SET_USERNAME
-} from './types';
+} from 'constants/index';
 
 export const setUsername = (username: string) => {
   return (dispatch: Dispatch<dashboardActions>) => {

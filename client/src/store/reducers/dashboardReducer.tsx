@@ -2,7 +2,7 @@ import { dashboardState, dashboardActions } from '../../typings/dashboardTypes';
 import {
   DASHBOARD_SET_USERNAME,
   DASHBOARD_SET_ACTIVE_USERS
-} from '../actions/types';
+} from 'constants/index';
 
 const initState: dashboardState = {
   username: '',

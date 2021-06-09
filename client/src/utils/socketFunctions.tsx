@@ -1,7 +1,7 @@
 import { store } from "store";
 import { setActiveUsers } from 'store/actions/dashboardActions';
 import { IUser } from "typings/userTypes";
-import { socket } from './wssConnect';
+import { socket } from './wssConnection';
 
 const ACTIVE_USERS = 'ACTIVE_USERS';
 const GROUP_CALL_ROOMS =  'GROUP_CALL_ROOMS';

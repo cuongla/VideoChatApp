@@ -1,15 +1,14 @@
 import React, { FC, FormEvent, useState } from 'react'
 import { useHistory } from 'react-router';
-import FormInput from './shared/FormInput';
-import FormButton from './shared/FormButton';
-import { addNewUser } from 'utils/wssConnect';
-import { useDispatch } from 'react-redux';
+import FormInput from 'components/shared/FormInput';
+import FormButton from 'components/shared/FormButton';
+import { addNewUser } from 'utils/wssConnection';
 
-interface LoginProps {
+interface LoginPageProps {
     saveUsername?: (username: string) => void
 }
 
-const Login: FC<LoginProps> = ({ saveUsername }) => {
+const LoginPage: FC<LoginPageProps> = ({ saveUsername }) => {
     const history = useHistory();
 
     const [username, setUsername] = useState('');
@@ -36,4 +35,4 @@ const Login: FC<LoginProps> = ({ saveUsername }) => {
     )
 }
 
-export default Login
+export default LoginPage

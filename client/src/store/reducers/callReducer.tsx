@@ -1,4 +1,9 @@
-import { CALL_SET_LOCAL_STREAM, CALL_SET_CALL_STATE } from '../actions/types';
+import {
+  CALL_SET_LOCAL_STREAM,
+  CALL_SET_CALL_STATE,
+  CALL_SET_CALLING_DIALOG_VISIBLE,
+  CALL_SET_CALLER_USERNAME
+} from 'constants/index';
 import { callActions, callState } from 'typings/callTypes';
 
 export const callStates = {
@@ -8,12 +13,14 @@ export const callStates = {
   CALL_IN_PROGRESS: 'CALL_IN_PROGRESS'
 }
 
-const initState: callState = {
+const initalState: callState = {
   localStream: null,
-  callState: callStates.CALL_UNAVAILABLE
+  callState: callStates.CALL_UNAVAILABLE,
+  callingDialogVisible: false,
+  callerUsername: ''
 };
 
-const CallReducer = (state = initState, action: callActions) => {
+const CallReducer = (state = initalState, action: callActions) => {
   switch (action.type) {
     case CALL_SET_LOCAL_STREAM:
       return {
@@ -25,6 +32,16 @@ const CallReducer = (state = initState, action: callActions) => {
         ...state,
         callState: action.callState
       }
+    case CALL_SET_CALLING_DIALOG_VISIBLE:
+      return {
+        ...state,
+        callingDialogVisible: action.callingDialogVisible
+      };
+    case CALL_SET_CALLER_USERNAME:
+      return {
+        ...state,
+        callerUsername: action.callerUsername
+      };
     default:
       return state;
   }
