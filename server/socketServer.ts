@@ -49,23 +49,59 @@ export const initSocketServer = (server: any) => {
 
         // requesting a call to a callee
         socket.on('requesting-call', (data: RequestCallData) => {
-            console.log('requestCall handled');
+            console.log('Calleer is requesting a call with callee');
             io
                 .to(data.callee.socketId)
-                .emit('requestCall', {
+                .emit('requesting-call', {
                     callerUsername: data.caller.username,
                     callerSocketId: socket.id
                 });
         });
 
-        // callee might or might not answer the call
-        socket.on('pre-answer-call', (data: RequestCallData) => {
-            console.log('Handling pre-call answer');
+        // waiting for callee to accept the call
+        socket.on('pre-connecting-callee', (data: RequestCallData) => {
+            console.log('Waiting for callee to asnwer the call');
             io
                 .to(data.callerSocketId as string)
-                .emit('pre-answer-call', {
+                .emit('pre-connecting-callee', {
                     answer: data.answer
                 });
+        });
+
+        // connecting to callee when callee accept the call
+        socket.on('connecting-to-callee', (data) => {
+            console.log('Handle webRCt for requesting a call');
+            io
+                .to(data.calleeSocketId)
+                .emit('connecting-to-callee', {
+                    offer: data.offer
+                });
+        });
+
+
+        // connecting to caller when callee accept the call
+        socket.on('connecting-to-caller', (data) => {
+            console.log('Handle webRCt for answering a call');
+            io
+                .to(data.callerSocketId)
+                .emit('connecting-to-caller', {
+                    answer: data.answer
+                });
+        });
+
+        socket.on('webRTC-candidate', (data) => {
+            console.log('handling ice candidate');
+            io
+                .to(data.connectedUserSocketId)
+                .emit('webRTC-candidate', {
+                    candidate: data.candidate
+                });
+        });
+
+        socket.on('user-hanged-up', (data) => {
+            io
+                .to(data.connectedUserSocketId)
+                .emit('user-hanged-up');
         });
     });
 }
