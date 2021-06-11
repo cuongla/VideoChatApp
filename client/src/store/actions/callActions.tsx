@@ -1,12 +1,19 @@
 import { Dispatch } from 'react'
-import { callActions } from 'typings/callTypes'
+import { callActions, ICallRejectedDetails } from 'typings/callTypes'
 import {
     CALL_SET_LOCAL_STREAM,
     CALL_SET_CALL_STATE,
     CALL_SET_CALLING_DIALOG_VISIBLE,
-    CALL_SET_CALLER_USERNAME
+    CALL_SET_CALLER_USERNAME,
+    CALL_SET_CALL_REJECTED,
+    CALL_SET_REMOTE_STREAM,
+    CALL_SET_LOCAL_MICROPHONE_ENABLED,
+    CALL_SET_LOCAL_CAMERA_ENABLED,
+    CALL_SET_SCREEN_SHARING_ACTIVE,
+    CALL_RESET_CALL_STATE
 } from 'constants/index';
 
+// stream on both caller and callee
 export const setLocalStream = (localStream: any) => {
     return (dispatch: Dispatch<callActions>) => {
         dispatch({
@@ -16,6 +23,14 @@ export const setLocalStream = (localStream: any) => {
     }
 }
 
+export const setRemoteStream = (remoteStream: any) => {
+    return {
+        type: CALL_SET_REMOTE_STREAM,
+        remoteStream
+    };
+};
+
+// check cqll states
 export const setCallState = (callState: string) => {
     console.log(callState);
     return (dispatch: Dispatch<callActions>) => {
@@ -43,3 +58,43 @@ export const setCallerUsername = (callerUsername: string) => {
         })
     }
 }
+
+export const setCallRejected = (callRejectedDetails: ICallRejectedDetails) => {
+    return {
+        type: CALL_SET_CALL_REJECTED,
+        callRejected: {
+            rejected: callRejectedDetails.rejected,
+            reason: callRejectedDetails.reason
+        }
+    };
+};
+
+// setting up devices for video chat 
+export const setLocalMicrophoneEnabled = (enabled: boolean) => {
+    return {
+        type: CALL_SET_LOCAL_MICROPHONE_ENABLED,
+        enabled
+    };
+};
+
+export const setLocalCameraEnabled = (enabled: boolean) => {
+    return {
+        type: CALL_SET_LOCAL_CAMERA_ENABLED,
+        enabled
+    };
+};
+
+export const setScreenSharingActive = (active: boolean) => {
+    return {
+        type: CALL_SET_SCREEN_SHARING_ACTIVE,
+        active
+    };
+};
+
+// reset call 
+export const resetCallDataState = () => {
+    return {
+      type: CALL_RESET_CALL_STATE
+    };
+  };
+  

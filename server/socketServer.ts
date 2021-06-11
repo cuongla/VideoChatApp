@@ -47,9 +47,9 @@ export const initSocketServer = (server: any) => {
             });
         });
 
-        // requesting a call to a callee
+        // sending a request for call
         socket.on('requesting-call', (data: RequestCallData) => {
-            console.log('Calleer is requesting a call with callee');
+            console.log('Sending call request to callee');
             io
                 .to(data.callee.socketId)
                 .emit('requesting-call', {
@@ -58,42 +58,42 @@ export const initSocketServer = (server: any) => {
                 });
         });
 
-        // waiting for callee to accept the call
-        socket.on('pre-connecting-callee', (data: RequestCallData) => {
-            console.log('Waiting for callee to asnwer the call');
+        // callee send the response back to caller
+        socket.on('responding-call', (data: RequestCallData) => {
+            console.log('Responding to call');
             io
                 .to(data.callerSocketId as string)
-                .emit('pre-connecting-callee', {
+                .emit('responding-call', {
                     answer: data.answer
                 });
         });
 
-        // connecting to callee when callee accept the call
-        socket.on('connecting-to-callee', (data) => {
-            console.log('Handle webRCt for requesting a call');
+        // caller is receiving signal from callee 
+        socket.on('connecting-callee', (data) => {
+            console.log('Connecting to caller');
             io
                 .to(data.calleeSocketId)
-                .emit('connecting-to-callee', {
+                .emit('connecting-callee', {
                     offer: data.offer
                 });
         });
 
 
         // connecting to caller when callee accept the call
-        socket.on('connecting-to-caller', (data) => {
+        socket.on('connecting-caller', (data) => {
             console.log('Handle webRCt for answering a call');
             io
                 .to(data.callerSocketId)
-                .emit('connecting-to-caller', {
+                .emit('connecting-caller', {
                     answer: data.answer
                 });
         });
 
-        socket.on('webRTC-candidate', (data) => {
+        socket.on('handling-call-candidate', (data) => {
             console.log('handling ice candidate');
             io
                 .to(data.connectedUserSocketId)
-                .emit('webRTC-candidate', {
+                .emit('handling-call-candidate', {
                     candidate: data.candidate
                 });
         });

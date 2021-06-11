@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
 import ActiveUserLists from 'components/users/ActiveUserLists';
-import { getLocalStream } from 'utils/webRTCHandler';
+import { getLocalStream } from 'utils/WebRTCLogic';
 import DirectCall from 'components/calls/DirectCall';
 
 const DashboardPage = () => {
     useEffect(() => {
         getLocalStream()
     }, []);
-    
+
     return (
         <div className='dashboard_container background_primary_color'>
             <div className='dashboard_left_section'>

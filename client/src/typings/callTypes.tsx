@@ -3,16 +3,15 @@ import {
     CALL_SET_CALL_STATE,
     CALL_SET_CALLING_DIALOG_VISIBLE,
     CALL_SET_CALLER_USERNAME,
+    CALL_SET_CALL_REJECTED,
+    CALL_SET_REMOTE_STREAM,
+    CALL_SET_LOCAL_CAMERA_ENABLED,
+    CALL_SET_LOCAL_MICROPHONE_ENABLED,
+    CALL_SET_SCREEN_SHARING_ACTIVE,
+    CALL_RESET_CALL_STATE
 } from 'constants/index'
 import { IUser } from './userTypes'
 
-
-export interface callState {
-    localStream: any
-    callState: string
-    callingDialogVisible: boolean
-    callerUsername: string
-}
 
 export interface CallRequestData {
     callee: IUser,
@@ -21,9 +20,31 @@ export interface CallRequestData {
     }
 }
 
+export interface ICallRejectedDetails {
+    rejected: boolean
+    reason: string
+}
+
+export interface callReducerState {
+    localStream: any
+    callState: string
+    callingDialogVisible: boolean
+    callerUsername: string
+    callRejected: ICallRejectedDetails
+    remoteStream: any
+    localCameraEnabled: boolean
+    localMicrophoneEnabled: boolean
+    screenSharingActive: boolean
+}
+
 type setLocaStreamAction = {
     type: typeof CALL_SET_LOCAL_STREAM
     localStream: any
+}
+
+type setRemoteStreamAction = {
+    type: typeof CALL_SET_REMOTE_STREAM
+    remoteStream: any
 }
 
 type setCallStateAction = {
@@ -41,4 +62,29 @@ type setCallerUsernameAction = {
     callerUsername: string
 }
 
-export type callActions = setLocaStreamAction | setCallStateAction | setCallingDialogAction | setCallerUsernameAction;
+type setCallRejectAction = {
+    type: typeof CALL_SET_CALL_REJECTED
+    callRejected: ICallRejectedDetails
+}
+
+type setLocalCameraAction = {
+    type: typeof CALL_SET_LOCAL_CAMERA_ENABLED
+    localCameraEnabled: boolean
+}
+
+type setLocalMicrophoneAction = {
+    type: typeof CALL_SET_LOCAL_MICROPHONE_ENABLED
+    localMicrophoneEnabled: boolean
+}
+
+type setScreenSharingAction = {
+    type: typeof CALL_SET_SCREEN_SHARING_ACTIVE
+    screenSharingActive: boolean
+}
+
+type setResetCallState = {
+    type: typeof CALL_RESET_CALL_STATE
+    callerUsername: callReducerState
+}
+
+export type callActions = setLocaStreamAction | setRemoteStreamAction |setCallStateAction | setCallingDialogAction | setCallerUsernameAction | setCallRejectAction | setLocalCameraAction | setLocalMicrophoneAction | setScreenSharingAction | setResetCallState;
