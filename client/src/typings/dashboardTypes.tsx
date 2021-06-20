@@ -1,12 +1,14 @@
 import { IUser } from "./userTypes";
 import {
     DASHBOARD_SET_USERNAME,
-    DASHBOARD_SET_ACTIVE_USERS
+    DASHBOARD_SET_ACTIVE_USERS,
+    DASHBOARD_SET_GROUP_CALL_ROOMS
 } from 'constants/index';
 
 export interface dashboardState {
     username: string
     activeUsers: IUser[]
+    groupCallRooms: any
 }
 
 type setUsernameAction = {
@@ -19,4 +21,9 @@ type setActiveUsersAction = {
     activeUsers: IUser[]
 }
 
-export type dashboardActions =  setUsernameAction | setActiveUsersAction;
+type setGroupCalls = {
+    type: typeof DASHBOARD_SET_GROUP_CALL_ROOMS
+    groupCallRooms: any
+}
+
+export type dashboardActions = setUsernameAction | setActiveUsersAction | setGroupCalls;

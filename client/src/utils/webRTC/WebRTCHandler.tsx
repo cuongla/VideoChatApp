@@ -1,5 +1,5 @@
 import { store } from 'store';
-import { setRemoteStream, setScreenSharingActive } from 'store/actions/callActions';
+import { setMessage, setRemoteStream, setScreenSharingActive } from 'store/actions/callActions';
 import {
     setCallState,
     setLocalStream,
@@ -9,10 +9,10 @@ import {
     resetCallDataState
 } from "store/actions/callActions";
 import { callStates } from "store/reducers/callReducer";
+import { callActions } from 'typings/callTypes';
 import { IUser } from "typings/userTypes";
 import * as wss from '../wssConnection';
 
-let connectedUserSocketId: number | string | null;
 
 // responding to call state
 const requestCallState = {
@@ -21,14 +21,26 @@ const requestCallState = {
     CALL_NOT_AVAILABLE: 'CALL_NOT_AVAILABLE'
 }
 
-// creating a peer connecting
-let peerConnection: any;
+// configuration
+const defaultConstrains = {
+    video: {
+        width: 480,
+        height: 360
+    },
+    audio: true
+};
 
 const configuration = {
     iceServers: [{
         urls: 'stun:stun.l.google.com:13902'
     }]
 };
+
+// creating a peer connecting
+let peerConnection: any;
+let connectedUserSocketId: number | string | null;
+let dataChannel: any;
+
 
 export const createPeerConnection = () => {
     peerConnection = new RTCPeerConnection(configuration);
@@ -43,13 +55,39 @@ export const createPeerConnection = () => {
         store.dispatch(setRemoteStream(stream) as any);
     };
 
+    // chat channel handling
+    // incoming data channel messages
+    peerConnection.ondatachannel = (event: any) => {
+        const dataChannel = event.channel;
+
+        dataChannel.onopen = () => {
+            console.log('peer connection is ready to receive data channel messages');
+        };
+
+        dataChannel.onmessage = (event: any) => {
+            store.dispatch(setMessage(true, event.data) as callActions);
+        };
+    };
+    dataChannel = peerConnection.createDataChannel('chat');
+
+    dataChannel.onopen = () => {
+        console.log('Chat Channel Opened');
+    };
+
+    // call handling
     peerConnection.onicecandidate = (event: any) => {
-        console.log('geeting candidates from stun server');
+        console.log('Handling ICE from Server');
         if (event.candidate) {
-            wss.handleWebRTCCandidate({
+            wss.handleWebRTCIce({
                 candidate: event.candidate,
                 connectedUserSocketId
             });
+        }
+    };
+
+    peerConnection.onconnectionstatechange = (event: any) => {
+        if (peerConnection.connectionState === 'connected') {
+            console.log('succesfully connected with other peer');
         }
     };
 }
@@ -58,7 +96,7 @@ export const createPeerConnection = () => {
 export const getLocalStream = () => {
     navigator
         .mediaDevices
-        .getUserMedia({ audio: true, video: true })
+        .getUserMedia(defaultConstrains)
         .then(stream => {
             console.log(stream);
             store.dispatch(setLocalStream(stream) as any);
@@ -80,24 +118,6 @@ export const checkIfCallIsPossible = () => {
     }
 }
 
-export const handleCallOtherUser = (calleeDetails: IUser) => {
-    connectedUserSocketId = calleeDetails.socketId;
-    store.dispatch(setCallState(callStates.CALL_IN_PROGRESS) as any);
-    store.dispatch(setCallingDialogVisible(true) as any);
-    wss.sendCallRequest({
-        callee: calleeDetails,
-        caller: {
-            username: store.getState().dashboard.username
-        }
-    })
-}
-
-export const handleRequestCall = (data: any) => {
-    connectedUserSocketId = data.callerSocketId;
-    store.dispatch(setCallerUsername(data.callerUsername) as any);
-    store.dispatch(setCallState(callStates.CALL_REQUESTED) as any);
-};
-
 export const handlePreRequest = (data: any) => {
     if (checkIfCallIsPossible()) {
         connectedUserSocketId = data.callerSocketId;
@@ -111,11 +131,32 @@ export const handlePreRequest = (data: any) => {
     }
 };
 
+export const sendRequest = async () => {
+    const offer = await peerConnection.createOffer();
+    await peerConnection.setLocalDescription(offer);
+    wss.sendWebRTCRequest({
+        calleeSocketId: connectedUserSocketId,
+        offer: offer
+    });
+}
+
+export const handleCallOtherUser = (calleeDetails: IUser) => {
+    connectedUserSocketId = calleeDetails.socketId;
+    store.dispatch(setCallState(callStates.CALL_IN_PROGRESS) as any);
+    store.dispatch(setCallingDialogVisible(true) as any);
+    wss.sendCallRequest({
+        callee: calleeDetails,
+        caller: {
+            username: store.getState().dashboard.username
+        }
+    })
+}
+
 /* ========== CALLEE RESPONSE CALLS ========== */
 export const handlePreResponse = (data: any) => {
     store.dispatch(setCallingDialogVisible(false) as any);
     if (data.answer === requestCallState.CALL_ACCEPTED) {
-        handleSendingResponse();
+        sendResponse();
     } else {
         let rejectionReason;
         if (data.answer === requestCallState.CALL_NOT_AVAILABLE) {
@@ -126,16 +167,17 @@ export const handlePreResponse = (data: any) => {
         store.dispatch(setCallRejected({
             rejected: true,
             reason: rejectionReason
-        }) as any);
+        }) as callActions);
 
         resetCallData();
     }
 }
 
-const handleSendingResponse = async () => {
+const sendResponse = async () => {
     const offer = await peerConnection.createOffer();
     await peerConnection.setLocalDescription(offer);
-    wss.sendWebRTCOffer({
+    // connect to caller if callee accept call
+    wss.sendWebRTCRequest({
         calleeSocketId: connectedUserSocketId,
         offer: offer
     });
@@ -159,17 +201,17 @@ export const handleRejectIncomingCallRequest = () => {
 };
 
 /* ========== CONNECTING CALLER AND CALLLEE ========== */
-export const handleConnectingCaller = async (data: any) => {
+export const handleRequest = async (data: any) => {
     await peerConnection.setRemoteDescription(data.offer);
     const answer = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
-    wss.connectingCaller({
+    wss.sendWebRTCResponse({
         callerSocketId: connectedUserSocketId,
         answer
     });
 };
 
-export const handleConnectingCallee = async (data: any) => {
+export const handleResponse = async (data: any) => {
     await peerConnection.setRemoteDescription(data.answer);
 };
 
@@ -209,6 +251,17 @@ export const switchForScreenSharingStream = async () => {
 
 
 /* ========== RESET CALL OR USER HANG UP ========== */
+export const hangUp = () => {
+    wss.sendUserHangedUp({
+        connectedUserSocketId: connectedUserSocketId
+    });
+    resetCallDataAfterHangUp();
+};
+
+export const handleUserHangedUp = () => {
+    resetCallDataAfterHangUp();
+};
+
 const resetCallDataAfterHangUp = () => {
     peerConnection.close();
     peerConnection = null;
@@ -228,18 +281,12 @@ const resetCallDataAfterHangUp = () => {
     store.dispatch(resetCallDataState() as any);
 };
 
-export const hangUp = () => {
-    wss.handleUserHangUp({
-        connectedUserSocketId: connectedUserSocketId
-    });
-    resetCallDataAfterHangUp();
-};
-
-export const handleUserHangedUp = () => {
-    resetCallDataAfterHangUp();
-};
-
 export const resetCallData = () => {
     connectedUserSocketId = null;
     store.dispatch(setCallState(callStates.CALL_AVAILABLE) as any);
 };
+
+/* ========== CHAT HANDLING ========== */
+export const sendMessageUsingDataChannel = (message: string) => {
+    dataChannel.send(message);
+}
