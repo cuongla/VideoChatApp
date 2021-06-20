@@ -49,7 +49,7 @@ const LoginPage: FC<LoginPageProps> = ({ saveUsername }) => {
                     <Alert
                         openAlert={openAlert}
                         handleCloseAlert={handleCloseAlert}
-                        alertTitle="Error Logining"
+                        alertTitle="Error Logging In"
                         alertContent="The minimum characters for username is 3 characters. Please check again!" />
                     <form className={classes.loginForm}>
                         <TextField

@@ -8,7 +8,11 @@ import {
     CALL_SET_LOCAL_CAMERA_ENABLED,
     CALL_SET_LOCAL_MICROPHONE_ENABLED,
     CALL_SET_SCREEN_SHARING_ACTIVE,
-    CALL_RESET_CALL_STATE
+    CALL_RESET_CALL_STATE,
+    CALL_SET_GROUP_CALL_ACTIVE,
+    CALL_SET_GROUP_CALL_STREAMS,
+    CALL_CLEAR_GROUP_CALL_DATA,
+    CALL_SET_CHAT_MESSAGE
 } from 'constants/index'
 import { IUser } from './userTypes'
 
@@ -35,6 +39,12 @@ export interface callReducerState {
     localCameraEnabled: boolean
     localMicrophoneEnabled: boolean
     screenSharingActive: boolean
+    groupCallActive: boolean
+    groupCallStreams: any
+    message: {
+        received: boolean
+        content: string
+    }
 }
 
 type setLocaStreamAction = {
@@ -87,4 +97,26 @@ type setResetCallState = {
     callerUsername: callReducerState
 }
 
-export type callActions = setLocaStreamAction | setRemoteStreamAction |setCallStateAction | setCallingDialogAction | setCallerUsernameAction | setCallRejectAction | setLocalCameraAction | setLocalMicrophoneAction | setScreenSharingAction | setResetCallState;
+type setGroupCallActive = {
+    type: typeof CALL_SET_GROUP_CALL_ACTIVE
+    groupCallActive: boolean
+}
+
+type setGroupCallStreams = {
+    type: typeof CALL_SET_GROUP_CALL_STREAMS
+    groupCallStreams: any
+}
+
+type setClearGroupCall = {
+    type: typeof CALL_CLEAR_GROUP_CALL_DATA
+}
+
+type setCallChat = {
+    type: typeof CALL_SET_CHAT_MESSAGE
+    message: {
+        received: boolean
+        content: string
+    }
+}
+
+export type callActions = setLocaStreamAction | setRemoteStreamAction | setCallStateAction | setCallingDialogAction | setCallerUsernameAction | setCallRejectAction | setLocalCameraAction | setLocalMicrophoneAction | setScreenSharingAction | setResetCallState | setGroupCallActive | setClearGroupCall | setGroupCallStreams | setCallChat;

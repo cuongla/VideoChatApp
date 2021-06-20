@@ -10,7 +10,7 @@ import {
 } from "store/actions/callActions";
 import { callStates } from "store/reducers/callReducer";
 import { IUser } from "typings/userTypes";
-import * as wss from './wssConnection';
+import * as wss from '../wssConnection';
 
 let connectedUserSocketId: number | string | null;
 

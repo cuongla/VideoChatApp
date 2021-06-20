@@ -10,7 +10,11 @@ import {
     CALL_SET_LOCAL_MICROPHONE_ENABLED,
     CALL_SET_LOCAL_CAMERA_ENABLED,
     CALL_SET_SCREEN_SHARING_ACTIVE,
-    CALL_RESET_CALL_STATE
+    CALL_RESET_CALL_STATE,
+    CALL_SET_GROUP_CALL_ACTIVE,
+    CALL_SET_GROUP_CALL_STREAMS,
+    CALL_SET_CHAT_MESSAGE,
+    CALL_CLEAR_GROUP_CALL_DATA
 } from 'constants/index';
 
 // stream on both caller and callee
@@ -94,7 +98,37 @@ export const setScreenSharingActive = (active: boolean) => {
 // reset call 
 export const resetCallDataState = () => {
     return {
-      type: CALL_RESET_CALL_STATE
+        type: CALL_RESET_CALL_STATE
     };
-  };
-  
+};
+
+// group calls handling
+export const setGroupCallActive = (active: boolean) => {
+    return {
+        type: CALL_SET_GROUP_CALL_ACTIVE,
+        active
+    };
+};
+
+export const setGroupCallIncomingStreams = (groupCallStreams: any) => {
+    return {
+        type: CALL_SET_GROUP_CALL_STREAMS,
+        groupCallStreams
+    };
+};
+
+export const clearGroupCallData = () => {
+    return {
+        type: CALL_CLEAR_GROUP_CALL_DATA
+    };
+};
+
+export const setMessage = (messageReceived: boolean, messageContent: string) => {
+    return {
+        type: CALL_SET_CHAT_MESSAGE,
+        message: {
+            received: messageReceived,
+            content: messageContent
+        }
+    };
+}

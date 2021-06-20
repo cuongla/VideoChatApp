@@ -8,7 +8,11 @@ import {
   CALL_SET_LOCAL_CAMERA_ENABLED,
   CALL_SET_LOCAL_MICROPHONE_ENABLED,
   CALL_SET_SCREEN_SHARING_ACTIVE,
-  CALL_RESET_CALL_STATE
+  CALL_RESET_CALL_STATE,
+  CALL_SET_GROUP_CALL_ACTIVE,
+  CALL_SET_CHAT_MESSAGE,
+  CALL_SET_GROUP_CALL_STREAMS,
+  CALL_CLEAR_GROUP_CALL_DATA
 } from 'constants/index';
 import { callActions, callReducerState } from 'typings/callTypes';
 
@@ -31,7 +35,13 @@ const initalState: callReducerState = {
   remoteStream: null,
   localCameraEnabled: true,
   localMicrophoneEnabled: true,
-  screenSharingActive: false
+  screenSharingActive: false,
+  groupCallActive: false,
+  groupCallStreams: [],
+  message: {
+    received: false,
+    content: ''
+  }
 };
 
 const CallReducer = (state = initalState, action: callActions): callReducerState => {
@@ -90,6 +100,30 @@ const CallReducer = (state = initalState, action: callActions): callReducerState
         localMicrophoneEnabled: true,
         localCameraEnabled: true,
         callingDialogVisible: false
+      };
+    case CALL_SET_GROUP_CALL_ACTIVE:
+      return {
+        ...state,
+        groupCallActive: action.groupCallActive
+      };
+    case CALL_SET_GROUP_CALL_STREAMS:
+      return {
+        ...state,
+        groupCallStreams: action.groupCallStreams
+      };
+    case CALL_CLEAR_GROUP_CALL_DATA:
+      return {
+        ...state,
+        groupCallActive: false,
+        groupCallStreams: [],
+        callState: callStates.CALL_AVAILABLE,
+        localMicrophoneEnabled: true,
+        localCameraEnabled: true
+      };
+    case CALL_SET_CHAT_MESSAGE:
+      return {
+        ...state,
+        message: action.message
       };
     default:
       return state;
